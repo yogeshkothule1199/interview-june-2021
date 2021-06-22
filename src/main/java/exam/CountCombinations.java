@@ -1,73 +1,108 @@
-/
-#include <bits/stdc++.h>
-using namespace std;
 
-void findNumbers(vector<int>& ar, int sum,
-				vector<vector<int> >& res, vector<int>& r,
-				int i)
+import java.util.*;
+
+class GFG{
+
+static List<String> arr = new ArrayList<String>();
+
+
+static List<List<Integer>> graph = new ArrayList<List<Integer>>();
+
+
+static List<String> path = new ArrayList<String>();
+
+
+static boolean print_euler(int i, int []visited,
+						int count)
 {
 	
-	if (sum == 0) {
-		res.push_back(r);
-		return;
+	
+	visited[i] = 1;
+	count++;
+
+		if (count == graph.size())
+	{
+		path.add(arr.get(i));
+		return true;
 	}
 
 	
-	while (i < ar.size() && sum - ar[i] >= 0) {
+	boolean b = false;
 
-		r.push_back(ar[i]); 
+		for(int j = 0; j < graph.get(i).size(); j++)
+		if (visited[graph.get(i).get(j)] == 0)
+		{
+			b |= print_euler(graph.get(i).get(j),
+							visited, count);
+		}
 
-		
-		findNumbers(ar, sum - ar[i], res, r, i);
-		i++;
+	if (b)
+	{
+		path.add(arr.get(i));
+		return true;
+	}
 
-		
-		r.pop_back();
+	
+	else
+	{
+		visited[i] = 0;
+		count--;
+		return false;
 	}
 }
-vector<vector<int> > combinationSum(vector<int>& ar,
-									int sum)
+
+static void connect()
 {
-	
-	sort(ar.begin(), ar.end());
+	int n = arr.size();
+	graph = new ArrayList<List<Integer>>(n);
 
-	// remove duplicates
-	ar.erase(unique(ar.begin(), ar.end()), ar.end());
-
-	vector<int> r;
-	vector<vector<int> > res;
-	findNumbers(ar, sum, res, r, 0);
-
-	return res;
-}
-
-
-int main()
-{
-	vector<int> ar;
-	ar.push_back(2);
-	ar.push_back(4);
-	ar.push_back(6);
-	ar.push_back(8);
-	int n = ar.size();
-
-	int sum = 8; 
-  vector<vector<int> > res = combinationSum(ar, sum);
-
-	
-	if (res.size() == 0) {
-		cout << "Emptyn";
-		return 0;
+	for(int i = 0; i < n; i++)
+	{
+		graph.add(new ArrayList<Integer>());
 	}
-
 	
-	for (int i = 0; i < res.size(); i++) {
-		if (res[i].size() > 0) {
-			cout << " ( ";
-			for (int j = 0; j < res[i].size(); j++)
-				cout << res[i][j] << " ";
-			cout << ")";
+	for(int i = 0; i < n; i++)
+	{
+		for(int j = 0; j < n; j++)
+		{
+			if (i == j)
+				continue;
+
+			if (arr.get(i).charAt((arr.get(i).length()) - 1) ==
+				arr.get(j).charAt(0))
+			{
+				graph.get(i).add(j);
+			}
 		}
 	}
+
+	for(int i = 0; i < n; i++)
+	{
+		int []visited = new int[n];
+		int count = 0;
+
+		if (print_euler(i, visited, count))
+			break;
+	}
+
+	for(int i = path.size() - 1; i >= 0; i--)
+	{
+		System.out.print(path.get(i));
+		
+		if (i != 0)
+			System.out.print(" ");
+	}
 }
+
+public static void main(String []args)
+{
+	arr.add("451");
+	arr.add("378");
+	arr.add("123");
+	arr.add("1254");
+
+	connect();
+}
+}
+
 
