@@ -1,73 +1,84 @@
-/
-#include <bits/stdc++.h>
-using namespace std;
+// Java program to find all combinations that
+// sum to a given value
+import java.io.*;
+import java.util.*;
 
-void findNumbers(vector<int>& ar, int sum,
-				vector<vector<int> >& res, vector<int>& r,
-				int i)
-{
-	
-	if (sum == 0) {
-		res.push_back(r);
-		return;
-	}
+class GFG {
 
-	
-	while (i < ar.size() && sum - ar[i] >= 0) {
-
-		r.push_back(ar[i]); 
+	static ArrayList<ArrayList<Integer> >
+	combinationSum(ArrayList<Integer> arr, int sum)
+	{
+		ArrayList<ArrayList<Integer> > ans
+			= new ArrayList<>();
+		ArrayList<Integer> temp = new ArrayList<>();
 
 		
-		findNumbers(ar, sum - ar[i], res, r, i);
-		i++;
 
-		
-		r.pop_back();
-	}
-}
-vector<vector<int> > combinationSum(vector<int>& ar,
-									int sum)
-{
-	
-	sort(ar.begin(), ar.end());
+		Set<Integer> set = new HashSet<>(arr);
+		arr.clear();
+		arr.addAll(set);
+		Collections.sort(arr);
 
-	// remove duplicates
-	ar.erase(unique(ar.begin(), ar.end()), ar.end());
-
-	vector<int> r;
-	vector<vector<int> > res;
-	findNumbers(ar, sum, res, r, 0);
-
-	return res;
-}
-
-
-int main()
-{
-	vector<int> ar;
-	ar.push_back(2);
-	ar.push_back(4);
-	ar.push_back(6);
-	ar.push_back(8);
-	int n = ar.size();
-
-	int sum = 8; 
-  vector<vector<int> > res = combinationSum(ar, sum);
-
-	
-	if (res.size() == 0) {
-		cout << "Emptyn";
-		return 0;
+		findNumbers(ans, arr, sum, 0, temp);
+		return ans;
 	}
 
-	
-	for (int i = 0; i < res.size(); i++) {
-		if (res[i].size() > 0) {
-			cout << " ( ";
-			for (int j = 0; j < res[i].size(); j++)
-				cout << res[i][j] << " ";
-			cout << ")";
+	static void
+	findNumbers(ArrayList<ArrayList<Integer> > ans,
+				ArrayList<Integer> arr, int sum, int index,
+				ArrayList<Integer> temp)
+	{
+
+		if (sum == 0) {
+
+			
+			ans.add(new ArrayList<>(temp));
+			return;
+		}
+
+		for (int i = index; i < arr.size(); i++) {
+
+			if ((sum - arr.get(i)) >= 0) {
+
+				temp.add(arr.get(i));
+
+				findNumbers(ans, arr, sum - arr.get(i), i,
+							temp);
+
+				temp.remove(arr.get(i));
+			}
+		}
+	}
+
+	// Driver Code
+
+	public static void main(String[] args)
+	{
+		ArrayList<Integer> arr = new ArrayList<>();
+
+		arr.add(2);
+		arr.add(4);
+		arr.add(6);
+		arr.add(8);
+
+		int sum = 8;
+
+		ArrayList<ArrayList<Integer> > ans
+			= combinationSum(arr, sum);
+
+		if (ans.size() == 0) {
+			System.out.println("Empty");
+			return;
+		}
+
+
+		for (int i = 0; i < ans.size(); i++) {
+
+			System.out.print("(");
+			for (int j = 0; j < ans.get(i).size(); j++) {
+				System.out.print(ans.get(i).get(j) + " ");
+			}
+			System.out.print(") ");
 		}
 	}
 }
-
